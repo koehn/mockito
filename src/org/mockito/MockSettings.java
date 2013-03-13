@@ -4,11 +4,12 @@
  */
 package org.mockito;
 
+import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.AnswerInterceptor;
 
 import java.io.Serializable;
+import javax.validation.ValidatorFactory;
 
 /**
  * Allows mock creation with additional mock settings.
@@ -214,11 +215,17 @@ public interface MockSettings extends Serializable {
     MockSettings stubOnly();
 
     /**
-     * Invokes a pluggable interceptor called when invocations are made on this mock.
+     * Sets whether parameters and return values should be subject to JSR-303
      *
-     * @param stubInterceptor
-     * @return
+     * @return settings instance so that you can fluently specify other settings
      */
-    MockSettings onStub(AnswerInterceptor stubInterceptor);
+    MockSettings validate();
 
+    /**
+     * Sets the ValidatorFactory to use when validating method invocations on this mock.
+     *
+     * @param factory  e.g., Validation.buildDefaultValidatorFactory()
+     * @return settings instance so that you can fluently specify other settings
+     */
+    MockSettingsImpl validatorFactory(ValidatorFactory factory);
 }

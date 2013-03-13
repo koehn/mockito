@@ -4,12 +4,10 @@
  */
 package org.mockito.internal.creation.settings;
 
-import org.mockito.cglib.proxy.MethodInterceptor;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.AnswerInterceptor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +30,8 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
     protected boolean serializable;
     protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
     protected boolean stubOnly;
-    protected AnswerInterceptor answerInterceptor;
+    protected boolean validate;
+    protected ValidatorFactory validatorFactory;
 
     public CreationSettings() {}
 
@@ -47,7 +46,8 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
         this.serializable = copy.serializable;
         this.invocationListeners = copy.invocationListeners;
         this.stubOnly = copy.stubOnly;
-        this.answerInterceptor = copy.answerInterceptor;
+        this.validate = copy.validate;
+        this.validatorFactory = copy.validatorFactory;
     }
 
     public Class<T> getTypeToMock() {
@@ -101,8 +101,12 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
         return stubOnly;
     }
 
-    public AnswerInterceptor getAnswerInterceptor() {
-        return answerInterceptor;
+    public boolean isValidate() {
+        return validate;
+    }
+
+    public ValidatorFactory getValidatorFactory() {
+        return validatorFactory;
     }
 
 }
