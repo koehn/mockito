@@ -21,10 +21,6 @@ import org.mockito.stubbing.VoidMethodStubbable;
 import org.mockito.verification.VerificationMode;
 
 import java.util.List;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.executable.ExecutableValidator;
 
 /**
  * Invocation handler set on mock objects.

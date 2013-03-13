@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import javax.validation.ValidatorFactory;
 
 /**
  * by Szczepan Faber, created at: 4/9/12
