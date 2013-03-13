@@ -4,8 +4,6 @@
  */
 package org.mockito.internal.creation;
 
-import static org.mockito.internal.util.collections.Sets.newSet;
-
 import org.mockito.MockSettings;
 import org.mockito.exceptions.Reporter;
 import org.mockito.internal.creation.settings.CreationSettings;
@@ -23,7 +21,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.validation.ValidatorFactory;
+
+import static org.mockito.internal.util.collections.Sets.newSet;
 
 @SuppressWarnings("unchecked")
 public class MockSettingsImpl<T> extends CreationSettings<T> implements MockSettings, MockCreationSettings<T> {
@@ -91,16 +90,6 @@ public class MockSettingsImpl<T> extends CreationSettings<T> implements MockSett
 
     public MockSettingsImpl stubOnly() {
         this.stubOnly = true;
-        return this;
-    }
-
-    public MockSettingsImpl validate() {
-        this.validate = true;
-        return this;
-    }
-
-    public MockSettingsImpl validatorFactory(ValidatorFactory factory) {
-        this.validatorFactory = factory;
         return this;
     }
 

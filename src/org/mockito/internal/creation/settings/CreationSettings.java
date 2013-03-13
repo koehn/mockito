@@ -30,8 +30,6 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
     protected boolean serializable;
     protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
     protected boolean stubOnly;
-    protected boolean validate;
-    protected ValidatorFactory validatorFactory;
 
     public CreationSettings() {}
 
@@ -46,8 +44,6 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
         this.serializable = copy.serializable;
         this.invocationListeners = copy.invocationListeners;
         this.stubOnly = copy.stubOnly;
-        this.validate = copy.validate;
-        this.validatorFactory = copy.validatorFactory;
     }
 
     public Class<T> getTypeToMock() {
@@ -99,14 +95,6 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
 
     public boolean isStubOnly() {
         return stubOnly;
-    }
-
-    public boolean isValidate() {
-        return validate;
-    }
-
-    public ValidatorFactory getValidatorFactory() {
-        return validatorFactory;
     }
 
 }

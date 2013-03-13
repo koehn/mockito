@@ -46,8 +46,6 @@ class MockHandlerImpl<T> implements InternalMockHandler<T> {
     }
 
     public Object handle(Invocation invocation) throws Throwable {
-        validateArguments(invocation);
-
 		if (invocationContainerImpl.hasAnswersForStubbing()) {
             invocation.setPhase(InvocationPhase.DEFINE);
             // stubbing voids with stubVoid() or doAnswer() style
@@ -56,7 +54,7 @@ class MockHandlerImpl<T> implements InternalMockHandler<T> {
                     invocation
             );
             invocationContainerImpl.setMethodForStubbing(invocationMatcher);
-            return validateReturnValue(invocation, null);
+            return null;
         }
         VerificationMode verificationMode = mockingProgress.pullVerificationMode();
 
@@ -75,7 +73,7 @@ class MockHandlerImpl<T> implements InternalMockHandler<T> {
             if (((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
                 VerificationDataImpl data = createVerificationData(invocationContainerImpl, invocationMatcher);
                 verificationMode.verify(data);
-                return validateReturnValue(invocation, null);
+                return null;
             } else {
                 // this means there is an invocation on a different mock. Re-adding verification mode
                 // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)
@@ -94,7 +92,7 @@ class MockHandlerImpl<T> implements InternalMockHandler<T> {
         if (stubbedInvocation != null) {
             invocation.setPhase(InvocationPhase.EXECUTE);
             stubbedInvocation.captureArgumentsFrom(invocation);
-            return validateReturnValue(invocation, stubbedInvocation.answer(invocation));
+            return stubbedInvocation.answer(invocation);
         } else {
              Object ret = mockSettings.getDefaultAnswer().answer(invocation);
 
@@ -104,43 +102,9 @@ class MockHandlerImpl<T> implements InternalMockHandler<T> {
             // to other self method and overwrite the intended stubbed method
             // with a different one. The reset is required to avoid runtime exception that validates return type with stubbed method signature.
             invocationContainerImpl.resetInvocationForPotentialStubbing(invocationMatcher);
-            return validateReturnValue(invocation, ret);
+            return ret;
         }
 	}
-
-    protected Object validateReturnValue(Invocation invocation,  Object returnValue) {
-        if (mockSettings.isValidate()) {
-            Validator validator = mockSettings.getValidatorFactory().getValidator();
-            ExecutableValidator executableValidator = validator.forExecutables();
-            Set<ConstraintViolation<Object>> constraintViolations =
-                executableValidator.validateReturnValue(invocation.getMock(), invocation.getMethod(),
-                    returnValue);
-
-            if (!constraintViolations.isEmpty()) {
-                throw new IllegalArgumentException("Invalid parameters to " + mockSettings
-                    .getMockName() + "." + invocation.getMethod().getName() + " : " +
-                    constraintViolations);
-            }
-        }
-
-        return returnValue;
-    }
-
-    protected void validateArguments(final Invocation invocation) {
-        if (mockSettings.isValidate()) {
-            Validator validator = mockSettings.getValidatorFactory().getValidator();
-            ExecutableValidator executableValidator = validator.forExecutables();
-            Set<ConstraintViolation<Object>> constraintViolations =
-            executableValidator.validateParameters(invocation.getMock(), invocation.getMethod(),
-                invocation.getArguments());
-
-            if (!constraintViolations.isEmpty()) {
-                throw new IllegalArgumentException("Invalid return value on " + mockSettings
-                    .getMockName() + "." + invocation.getMethod().getName() + " : " +
-                    constraintViolations);
-            }
-        }
-    }
 
     public VoidMethodStubbable<T> voidMethodStubbable(T mock) {
         return new VoidMethodStubbableImpl<T>(mock, invocationContainerImpl);
